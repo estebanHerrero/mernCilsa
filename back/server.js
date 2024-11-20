@@ -25,5 +25,5 @@ app.get("/", (req, res) => {
 }) 
 
 app.listen(3000, () => {
-    console.log(" ..(oO Escuchando el puerto 3000 Oo)..");
+    console.log(" ..oO) Escuchando el puerto 3000 (Oo..");
 })

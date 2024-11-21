@@ -1,51 +1,69 @@
-import { useEffect, useState } from "react";
-import axios from 'axios';
+import { useState, useEffect } from "react";
+
 
 
 function Tareas() {
 
-    const [tareas, setTareas] = useState([])
+    const [tasks, setTasks] = useState([]);
+   
+
+
     useEffect(() => {
-        axios.get('http://localhost:3000/')
-        .then(res => {
-            setTareas(res.data);
-            console.log(res.data);
-        })
-        .catch(err => console.log(err));
-    }, [])
+        const fetchTasks = async () => {
+            try {
+                const response = await fetch('http://localhost:3000/');
+                const data = await response.json();
+                setTasks(data);
+            }catch (error) {
+                console.error(' Error fetchin tasks:', error);
+            }
+        };
+        fetchTasks();
+    }, []);
+        
 
     return (
-        <div className="h-screen items-center mt-44 justify-center">
-            <div className="flex justify-cetner items-center">            
-                <h2 className="text-3xl font-sans text-[#313131]">bootcamp fullstack | Cilsa</h2>
-                <div className="w-44 ml-6 text-[#313131] rounded-full font-medium text-3xl">
+        <div className="h-screen bg-gray-200">
+            <div className="flex flex-col  h-screen justify-center items-center">
+                <div className="mb-12">            
+                    <h2 className="text-3xl font-sans text-[#313131]">bootcamp fullstack | Cilsa</h2>
+                </div>
+                <div className="flex gap-6">
+                    <input 
+                        type="text" 
+                        placeholder="Ingresá el nombre" 
+                        className="w-64 p-2 pr-20 outline-[#8FD14F] border border-[#8FD14F]" 
+                    />
+                    <input 
+                        type="text" 
+                        placeholder="Ingresá la descripción" 
+                        className="w-64 p-2 outline-[#8FD14F] border border-[#8FD14F]" 
+                    />
                     <button className="text-[#313131] border border-[#313131] hover:border-0 tracking-wide font-sans font-medium py-3 px-5 rounded-2xl text-xl hover:bg-[#559933]">Agrear tarea</button>
                 </div>
-            </div>
-            <div className="mt-12">
-                <table className="text-[#313131] border border-gray-400 shadow-md table">
-                    <thead>
-                        <tr className="bg-gray-400">
-                            <th className="px-6 py-4 font-medium text-center text-xl text-[#313131]">Nombre</th>
-                            <th className="px-6 py-4 font-medium text-center text-xl text-[#313131]">Descripción</th>
-                            <th className="px-6 py-4 font-medium text-center text-xl text-[#313131">Acción</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {tareas.map((data, i) => (
-                            <tr key={data.id || i}> {/* Use data.id if available, otherwise use index */}
-                                <td className="pr-40 text-left">{data.nombre}</td>
-                                <td className="pr-40 text-left">{data.descripcion}</td>
-                                <td>
-                                <div className="flex justify-between items-center"> {/* Added a flex container */}
-                                        <button className="text-[#313131] border border-[#313131] hover:border-0 mr-8 tracking-wide font-sans font-medium py-3 px-5 rounded-2xl text-lg hover:bg-[#7a9cfa]">Update</button>
-                                        <button className="text-[#313131] border border-[#313131] hover:border-0 tracking-wide font-sans font-medium py-3 px-5 rounded-2xl text-lg hover:bg-[#fc2121]">Delete</button>
-                                    </div>
+                <div className="mt-20">
+                    <table className="min-w-full divide-y divide-gray-200">
+                        <thead>
+                            <tr>
+                                <th className="px-6 py-3 bg-gray-300 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre</th>
+                                <th className="px-6 py-3 bg-gray-300 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Descripción</th>
+                                <th className="px-6 py-3 bg-gray-300"></th>
+                            </tr>
+                        </thead>
+                        <tbody className="bg-white divide-y divide-gray-200">
+                            {tasks.map((task) => (
+                            <tr key={task.id}>
+                                <td className="px-6 py-4 whitespace-nowrap">{task.nombre}</td>  
+                                <td className="px-6 py-4 whitespace-nowrap">{task.descripcion}</td>
+                                <td className="text-right px-2">
+                                    <button className="hover:bg-blue-400 mr-4 border border-[#313131] text-[#313131] text-lg hover:border-0 font-sans font-medium py-2 px-5 rounded-2xl">Editar</button>
+                                    <button className="hover:bg-red-400 border border-[#313131] text-[#313131] text-lg hover:border-0 font-sans font-medium py-2 px-5 rounded-2xl">Eliminar</button>
                                 </td>
                             </tr>
                         ))}
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     );

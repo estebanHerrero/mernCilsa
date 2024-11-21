@@ -5,7 +5,7 @@ import mysql from 'mysql2';
 
 
 const app = express();
-
+app.use(express.json());
 app.use(cors());
 
 const db = mysql.createConnection({
@@ -16,13 +16,14 @@ const db = mysql.createConnection({
 })
 
 
-app.get("/", (req, res) => {
+app.get("/Tareas", (req, res) => {
     const sql = "SELECT * FROM tareas";
     db.query(sql, (err, data) => {
         if(err) return res.json("Error");
         return res.json(data);
-    })
-}) 
+    });
+});
+
 
 app.listen(3000, () => {
     console.log(" ..oO) Escuchando el puerto 3000 (Oo..");

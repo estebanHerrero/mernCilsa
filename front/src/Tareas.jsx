@@ -5,8 +5,11 @@ import { useState, useEffect } from "react";
 function Tareas() {
 
     const [tasks, setTasks] = useState([]);
-   
+    const [newTask, setNewTask] = useState({ nombre: "", descripcion: ""});
+ 
 
+    const [error, setError] = useState(null);
+    const [isAddingTask, setIsAddingTask] = useState(false);
 
     useEffect(() => {
         const fetchTasks = async () => {
@@ -20,6 +23,38 @@ function Tareas() {
         };
         fetchTasks();
     }, []);
+
+    const handleInputChange = (event) => {
+        const { name, value } = event.target;
+        setNewTask({ ...newTask, [name]: value });
+    };
+
+    const addTask = async (event) => {
+        event.preventDefault();
+        setIsAddingTask(true);
+
+        try {
+            const response = await fetch('http://localhost:3000/', {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(newTask),
+            });
+
+            if (!response.ok) {
+                throw new Error(`Error agregando tarea: ${response.statusText}`);
+            }
+
+            const newTaskData = await response.json();
+            setTasks([ ...tasks, newTaskData]);
+            setNewTask({ nombre: "", descripcion: "" });
+            setError(null);
+        }catch (error) {
+            console.error("Error agregando tarea:", error);
+            setError("Ocurrió un error mientras se agregaba la nueva tarea.");
+        } finally {
+            setIsAddingTask(false);
+        }
+    };
         
 
     return (
@@ -28,26 +63,39 @@ function Tareas() {
                 <div className="mb-12">            
                     <h2 className="text-3xl font-sans text-[#313131]">bootcamp fullstack | Cilsa</h2>
                 </div>
-                <div className="flex gap-6">
-                    <input 
-                        type="text" 
-                        placeholder="Ingresá el nombre" 
-                        className="w-64 p-2 pr-20 outline-[#8FD14F] border border-[#8FD14F]" 
-                    />
-                    <input 
-                        type="text" 
-                        placeholder="Ingresá la descripción" 
-                        className="w-64 p-2 outline-[#8FD14F] border border-[#8FD14F]" 
-                    />
-                    <button className="text-[#313131] border border-[#313131] hover:border-0 tracking-wide font-sans font-medium py-3 px-5 rounded-2xl text-xl hover:bg-[#559933]">Agrear tarea</button>
-                </div>
+                <form onSubmit={addTask}>
+                    <div className="flex gap-6">
+                        <input 
+                            type="text" 
+                            name="nombre"
+                            placeholder="Ingresá el nombre" 
+                            className="w-64 p-2 pr-20 outline-[#8FD14F] border border-[#8FD14F]"
+                            value={newTask.nombre}
+                            onChange={handleInputChange}
+                            required 
+                        />
+                        <input 
+                            type="text" 
+                            name="descripcion"
+                            placeholder="Ingresá la descripción" 
+                            className="w-64 p-2 outline-[#8FD14F] border border-[#8FD14F]" 
+                            value={newTask.descripcion}
+                            onChange={handleInputChange}
+                            required
+                        />
+                        <button className={`text-[#313131] border border-[#313131] hover:border-0 tracking-wide font-sans font-medium py-3 px-5 rounded-2xl text-xl hover:bg-[#559933] ${isAddingTask ? "disabled opacity-50 cursor-not-allowed" : "" }`}
+                        disabled={isAddingTask}
+                        >{isAddingTask ? "Agregando..." : "Agregar tarea"}</button>
+                    </div>
+                    {error && <p className="text-red-500">{error}</p>}
+                </form>
                 <div className="mt-20">
                     <table className="min-w-full divide-y divide-gray-200">
                         <thead>
                             <tr>
                                 <th className="px-6 py-3 bg-gray-300 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre</th>
                                 <th className="px-6 py-3 bg-gray-300 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Descripción</th>
-                                <th className="px-6 py-3 bg-gray-300"></th>
+                                <th className="px-6 py-3 bg-gray-300 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
                             </tr>
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200">

@@ -6,9 +6,6 @@ function Tareas() {
 
     const [tasks, setTasks] = useState([]);
     const [newTask, setNewTask] = useState({ nombre: "", descripcion: ""});
-   
- 
-
     const [error, setError] = useState(null);
     const [isAddingTask, setIsAddingTask] = useState(false);
 
@@ -57,6 +54,8 @@ function Tareas() {
         }
     };
         
+  
+
    
     const handleDeleteTask = async (taskId) => {
         try {
@@ -75,6 +74,8 @@ function Tareas() {
           setError("Ocurrió un error mientras se eliminaba la tarea.");
         }
       };
+
+
 
     return (
         <div className="h-screen bg-gray-200">
@@ -114,6 +115,7 @@ function Tareas() {
                             <tr>
                                 <th className="px-6 py-3 bg-gray-300 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre</th>
                                 <th className="px-6 py-3 bg-gray-300 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Descripción</th>
+                                <th className="px-6 py-3 bg-gray-300 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
                                 <th className="px-6 py-3 bg-gray-300 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
                             </tr>
                         </thead>
@@ -122,11 +124,14 @@ function Tareas() {
                             <tr key={task.idTarea}>
                                 <td className="px-6 py-4 whitespace-nowrap">{task.nombre}</td>  
                                 <td className="px-6 py-4 whitespace-nowrap">{task.descripcion}</td>
+                                <td className="px-6 py-4 whitespace-nowrap">{task.estado}</td>
                                 <td className="text-right px-2">
-                                    <button className="hover:bg-blue-400 mr-4 border border-[#313131] text-[#313131] text-lg hover:border-0 font-sans font-medium py-2 px-5 rounded-2xl">Editar</button>
-                                    <button className="hover:bg-red-400 border border-[#313131] text-[#313131] text-lg hover:border-0 font-sans font-medium py-2 px-5 rounded-2xl"
+                                    <button className="hover:bg-blue-400 mr-4 border border-[#313131] text-[#313131] text-lg hover:border-0 font-sans font-medium py-2 px-4 rounded-2xl"
+                                    >Editar</button>
+                                    <button className="hover:bg-red-400 mr-4 border border-[#313131] text-[#313131] text-lg hover:border-0 font-sans font-medium py-2 px-4 rounded-2xl"
                                     onClick={() => handleDeleteTask(task.idTarea)}
                                     >Eliminar</button>
+                                    <button className="hover:bg-[#559933] mr-2 border border-[#313131] text-[#313131] text-lg hover:border-0 font-sans font-medium py-2 px-4 rounded-2xl">Finalizada</button>
                                 </td>
                             </tr>
                         ))}

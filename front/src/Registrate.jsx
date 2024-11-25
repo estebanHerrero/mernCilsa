@@ -1,6 +1,11 @@
 
 
 function Registrate() {
+
+   
+
+   
+
     return (
         <div className="flex items-center justify-center h-screen">
             <div className="p-10 rounded-lg shadow-md w-96 border border-[#313131] flex flex-col">

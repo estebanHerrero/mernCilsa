@@ -18,6 +18,7 @@ const db = mysql.createConnection({
 
 app.get("/", (req, res) => {
     const sql = "SELECT * FROM tareas";
+
     db.query(sql, (err, data) => {
         if(err) return res.json("Error");
         return res.json(data);
@@ -26,8 +27,8 @@ app.get("/", (req, res) => {
 
 app.get('/tareas/:id', (req, res) => {
     const { id } =req.params;
-
     const sql = 'SELECT * FROM tareas WHERE idTarea = ?';
+
     db.query(sql, [id], (err, data) => {
         if (err) {
             console.error(err);
@@ -52,19 +53,6 @@ app.post('/', (req, res) => {
     });
 });
 
-app.put('tareas/:id',(req, res) =>{
-    const sql = "UPDATE tareas set 'nombre' = ?, 'descripcion' = ? WHERE idTarea = ?";
-    const values = [
-        req.body.nombre,
-        req.body.descripcion
-    ]
-    const idTarea = req.params.idTarea;
-
-    db.query(sql, [...values, idTarea], (err, data) => {
-        if(err) return res.json("Error");
-        return res.json(data);
-    })
-})
 
 app.delete('/tareas/:id', async (req, res) => {
     const { id } = req.params;
@@ -81,6 +69,28 @@ app.delete('/tareas/:id', async (req, res) => {
       res.status(200).json({ message: 'Tarea eliminada exitosamente.'});
     });
   });
+
+app.post('/registrate', async (req, res) => {
+    const { nombrem, apellido, correoElectronico, contrasenia } = req.body;
+
+    const hashedPassword = await brcypt.hash(contrasenia, 10);
+
+    const [rows] = await db.promise().query('SELECT * FROM usuarios WHERE  correoElectronico = ?', [correoElectronico]);
+
+    if (rows.length > 0) {
+        return res.status(409).json({ error: 'El usuario ya existe.'});
+    }
+    const sql = 'INSERT INTO usuarios (nombre, apellido, correoElectronico, contrasenia) VALUES (?, ?, ?, ?)';
+    db.query(sql, [nombre, apellido, correoElectronico, hashedPassword], (err, result) => {
+        if(err) {
+            console.error(err);
+            return res.status(500).json({ error: 'Error al registrar el usuario' });
+        }
+        res.status(201).json({ message: 'Usuario registrado correctamente.'});
+    });
+});
+
+
 
 app.listen(3000, () => {
     console.log(" ..oO) Escuchando el puerto 3000 (Oo..");

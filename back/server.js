@@ -24,6 +24,22 @@ app.get("/", (req, res) => {
     });
 });
 
+app.get('/tareas/:id', (req, res) => {
+    const { id } =req.params;
+
+    const sql = 'SELECT * FROM tareas WHERE idTarea = ?';
+    db.query(sql, [id], (err, data) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ error: 'Error al obtener la tarea.'});
+        }
+        if (data.length === 0) {
+            return res.status(400).json({ message: ' Tarea no encontrada.'});
+        }
+        res.json(data[0]);
+    });
+});
+
 app.post('/', (req, res) => {
     const { nombre, descripcion } = req.body;
     const sql = 'INSERT INTO tareas (nombre, descripcion) VALUES (?, ?)';
@@ -36,23 +52,35 @@ app.post('/', (req, res) => {
     });
 });
 
-app.put('tareas/:id', async (req, res) =>{
+app.put('tareas/:id',(req, res) =>{
+    const sql = "UPDATE tareas set 'nombre' = ?, 'descripcion' = ? WHERE idTarea = ?";
+    const values = [
+        req.body.nombre,
+        req.body.descripcion
+    ]
+    const idTarea = req.params.idTarea;
+
+    db.query(sql, [...values, idTarea], (err, data) => {
+        if(err) return res.json("Error");
+        return res.json(data);
+    })
+})
+
+app.delete('/tareas/:id', async (req, res) => {
     const { id } = req.params;
-    const { nombre, descripcion } = req.body;
+    const sql = `DELETE FROM tareas WHERE idTarea = ?`;
 
-    const sql = `UPDATE tareas SET nombre = ?, descripcion = ? W_HEE id = ? `;
-    db.query(sql, [nombre, descripcion, id] , (err, result) => {
-        if (err) {
-            console.error(err);
-            return res.status(500).json({ error: 'Erro al actualizar la tarea.'});
-        }
-        if (result.affectedRows === 0) {
-            return res.status(400).json({ message: 'Tarea no encontrada.'});
-        }
-        res.status(200).json({ message: 'Tarea actualizada exitosamente.'});
+    db.query(sql, [id], (err, result) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ error: 'Error al eliminar la tarea.'});
+      }
+      if (result.affectedRows === 0) {
+        return res.status(404).json({ message: 'Tarea no encontrada.'});
+      }
+      res.status(200).json({ message: 'Tarea eliminada exitosamente.'});
     });
-});
-
+  });
 
 app.listen(3000, () => {
     console.log(" ..oO) Escuchando el puerto 3000 (Oo..");

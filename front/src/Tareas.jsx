@@ -6,6 +6,7 @@ function Tareas() {
 
     const [tasks, setTasks] = useState([]);
     const [newTask, setNewTask] = useState({ nombre: "", descripcion: ""});
+   
  
 
     const [error, setError] = useState(null);
@@ -56,6 +57,24 @@ function Tareas() {
         }
     };
         
+   
+    const handleDeleteTask = async (taskId) => {
+        try {
+          const response = await fetch(`http://localhost:3000/tareas/${taskId}`, {
+            method: "DELETE",
+          });
+      
+          if (!response.ok) {
+            throw new Error(`Error eliminando la tarea: ${response.statusText}`);
+          }
+      
+          setTasks(tasks.filter((task) => task.idTarea !== taskId)); 
+          setError(null);
+        } catch (error) {
+          console.error("Error eliminando la tarea:", error);
+          setError("Ocurrió un error mientras se eliminaba la tarea.");
+        }
+      };
 
     return (
         <div className="h-screen bg-gray-200">
@@ -100,12 +119,14 @@ function Tareas() {
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200">
                             {tasks.map((task) => (
-                            <tr key={task.id}>
+                            <tr key={task.idTarea}>
                                 <td className="px-6 py-4 whitespace-nowrap">{task.nombre}</td>  
                                 <td className="px-6 py-4 whitespace-nowrap">{task.descripcion}</td>
                                 <td className="text-right px-2">
                                     <button className="hover:bg-blue-400 mr-4 border border-[#313131] text-[#313131] text-lg hover:border-0 font-sans font-medium py-2 px-5 rounded-2xl">Editar</button>
-                                    <button className="hover:bg-red-400 border border-[#313131] text-[#313131] text-lg hover:border-0 font-sans font-medium py-2 px-5 rounded-2xl">Eliminar</button>
+                                    <button className="hover:bg-red-400 border border-[#313131] text-[#313131] text-lg hover:border-0 font-sans font-medium py-2 px-5 rounded-2xl"
+                                    onClick={() => handleDeleteTask(task.idTarea)}
+                                    >Eliminar</button>
                                 </td>
                             </tr>
                         ))}

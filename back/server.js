@@ -71,9 +71,7 @@ app.delete('/tareas/:id', async (req, res) => {
   });
 
 app.post('/registrate', async (req, res) => {
-    const { nombrem, apellido, correoElectronico, contrasenia } = req.body;
-
-    const hashedPassword = await brcypt.hash(contrasenia, 10);
+    const { nombre, apellido, correoElectronico, contrasenia } = req.body;
 
     const [rows] = await db.promise().query('SELECT * FROM usuarios WHERE  correoElectronico = ?', [correoElectronico]);
 
@@ -81,7 +79,7 @@ app.post('/registrate', async (req, res) => {
         return res.status(409).json({ error: 'El usuario ya existe.'});
     }
     const sql = 'INSERT INTO usuarios (nombre, apellido, correoElectronico, contrasenia) VALUES (?, ?, ?, ?)';
-    db.query(sql, [nombre, apellido, correoElectronico, hashedPassword], (err, result) => {
+    db.query(sql, [nombre, apellido, correoElectronico, contrasenia], (err, result) => {
         if(err) {
             console.error(err);
             return res.status(500).json({ error: 'Error al registrar el usuario' });
@@ -94,4 +92,31 @@ app.post('/registrate', async (req, res) => {
 
 app.listen(3000, () => {
     console.log(" ..oO) Escuchando el puerto 3000 (Oo..");
+})
+
+app.post('/login', (req, res) => {
+    const sql = "SELECT * FROM usuarios WHERE correoElectronico = ? AND contrasenia = ? ";
+    
+    db.query(sql, [req.body.email,req.body.password], (err, data) => {
+        if(err) return res.json("Error");
+        if(data.length > 0) {
+            return res.json("Login Successfully")
+        } else {
+            return res.json("Error")
+        }
+    })
+})
+
+app.post('Registrate', (req, res) => {
+    const sql = "INSERT INTO usuarios ('nombre','apellido','correoElectronico','contrasenia') VALUES (?, ?, ?, ?)";
+    const values = [
+        req.body.nombre,
+        req.body.apellido,
+        req.body.correoElectronico,
+        req.body,contraenia
+    ]
+    db.query(sql, values, (err, result) => {
+        if(err) return res.json({ message: "Ocurrió un error", err})
+        return res.json({ success: "Usuario agregado exitosamente."})
+    })
 })

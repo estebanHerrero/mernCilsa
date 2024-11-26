@@ -90,22 +90,13 @@ app.post('/registrate', async (req, res) => {
 
 
 
+
+
 app.listen(3000, () => {
     console.log(" ..oO) Escuchando el puerto 3000 (Oo..");
 })
 
-app.post('/login', (req, res) => {
-    const sql = "SELECT * FROM usuarios WHERE correoElectronico = ? AND contrasenia = ? ";
-    
-    db.query(sql, [req.body.email,req.body.password], (err, data) => {
-        if(err) return res.json("Error");
-        if(data.length > 0) {
-            return res.json("Login Successfully")
-        } else {
-            return res.json("Error")
-        }
-    })
-})
+
 
 app.post('Registrate', (req, res) => {
     const sql = "INSERT INTO usuarios ('nombre','apellido','correoElectronico','contrasenia') VALUES (?, ?, ?, ?)";
@@ -120,3 +111,4 @@ app.post('Registrate', (req, res) => {
         return res.json({ success: "Usuario agregado exitosamente."})
     })
 })
+

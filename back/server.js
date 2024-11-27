@@ -16,7 +16,7 @@ const db = mysql.createConnection({
 })
 
 
-app.get("/", (req, res) => {
+app.get("/tareas", (req, res) => {
     const sql = "SELECT * FROM tareas";
 
     db.query(sql, (err, data) => {
@@ -41,7 +41,7 @@ app.get('/tareas/:id', (req, res) => {
     });
 });
 
-app.post('/', (req, res) => {
+app.post('/tareas', (req, res) => {
     const { nombre, descripcion } = req.body;
     const sql = 'INSERT INTO tareas (nombre, descripcion) VALUES (?, ?)';
     db.query(sql, [nombre, descripcion], (err, reslut) => {
@@ -70,25 +70,23 @@ app.delete('/tareas/:id', async (req, res) => {
     });
   });
 
-app.post('/registrate', async (req, res) => {
-    const { nombre, apellido, correoElectronico, contrasenia } = req.body;
+  app.put('/tareas/:id', async (req, res) => {
+    const { id } = req.params;
+    const { nombre, descripcion } = req.body;
 
-    const [rows] = await db.promise().query('SELECT * FROM usuarios WHERE  correoElectronico = ?', [correoElectronico]);
+    const sql = `UPDATE tareas SET nombre = ?, descripcion = ? WHERE idTarea = ?`;
 
-    if (rows.length > 0) {
-        return res.status(409).json({ error: 'El usuario ya existe.'});
-    }
-    const sql = 'INSERT INTO usuarios (nombre, apellido, correoElectronico, contrasenia) VALUES (?, ?, ?, ?)';
-    db.query(sql, [nombre, apellido, correoElectronico, contrasenia], (err, result) => {
-        if(err) {
-            console.error(err);
-            return res.status(500).json({ error: 'Error al registrar el usuario' });
+    try {
+        const result =  db.query(sql, [nombre, descripcion, id]);
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: 'Tarea no encontrada.'});
         }
-        res.status(201).json({ message: 'Usuario registrado correctamente.'});
-    });
+        res.status(200).json({ message: 'Tarea actualizada correctamente.'});
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ error: 'Error al actualizar la tarea.'});
+    }
 });
-
-
 
 
 
@@ -110,5 +108,7 @@ app.post('Registrate', (req, res) => {
         if(err) return res.json({ message: "Ocurrió un error", err})
         return res.json({ success: "Usuario agregado exitosamente."})
     })
-})
+});
+
+
 

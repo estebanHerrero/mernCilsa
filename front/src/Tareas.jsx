@@ -12,7 +12,7 @@ function Tareas() {
     useEffect(() => {
         const fetchTasks = async () => {
             try {
-                const response = await fetch('http://localhost:3000/');
+                const response = await fetch('http://localhost:3000/tareas/');
                 const data = await response.json();
                 setTasks(data);
             }catch (error) {

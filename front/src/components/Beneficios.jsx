@@ -3,8 +3,8 @@
 
 function Beneficios () {
     return (
-        <div className="flex min-h-screen items-center justify-center">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="flex h-screen items-center justify-center">
+            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-5">
                 <div className="group relative items-center justify-center overflow-hidden cursor-pointer">
                     <div className="h-236 w-80 rounded-2xl">
                         <img className="h-full w-full object-cover group-hover:rotate-3 group-hover:scale-125 transition-tranform duration-500" src="https://images.unsplash.com/photo-1564659318400-669837b066ba?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" />

@@ -6,6 +6,7 @@ import Login from './Login';
 import Registrate from './Registrate';
 import Footer from './components/Footer';
 import Tareas from './Tareas';
+import Editar from './Editar';
 
 function App() {
   
@@ -18,6 +19,7 @@ function App() {
           <Route path='/' element={<Inicio />} />
           <Route path='/Login' element={<Login />} />
             <Route path='/Tareas' element={<Tareas />} />
+              <Route path='/Editar/:id' element={<Editar />} />
           <Route path="/Registrate" element={<Registrate />} />
         </Routes>
         <Footer />

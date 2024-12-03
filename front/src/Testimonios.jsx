@@ -7,8 +7,8 @@ function Testimonios() {
             <div className="grid grid-cols-2  text-center">
                 <div className="text-[#313131] flex flex-col justify-center items-center">
                     <h1 className="text-xl text-left font-thin">Testimonios</h1>
-                    <p className="text-center mt-4 text-2xl font-medium text-[#559933]">"...Mindnote me ha ayudado a organizar mis ideas de manera increíblemente eficiente. Gracias a él, he podido aumentar mi productividad en un 30%..."</p>
-                    <p className="text-left">----peterP</p>
+                    <p className="text-center mt-4 lg:text-3xl md:text-2xl font-medium text-[#559933]">"...Mindnote me ha ayudado a organizar mis ideas de manera increíblemente eficiente. Gracias a él, he podido aumentar mi productividad en un 30%..."</p>
+                    <p className="text-right">----peterP</p>
                 </div>
                 <div className="grid-cols-1 justify-self-end">
                     <div className="">

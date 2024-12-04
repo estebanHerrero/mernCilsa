@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import axios from 'axios';
 
 
 
 function Tareas() {
 
-    const [filter, setFilter] = useState({});
+    const [filter, setFilter] = useState('todas');
     const [tasks, setTasks] = useState([]);
     const [newTask, setNewTask] = useState({ nombre: "", descripcion: ""});
     const [error, setError] = useState(null);
@@ -21,6 +21,7 @@ function Tareas() {
         }));
         
         const newState = selectedTasks[taskId] ? 'Finalizada' : 'Pendinte';
+        
         const updatedTasks = tasks.map(task => {
             if (task.idTarea === taskId) {
               return { ...task, estado: newState }; 
@@ -53,10 +54,11 @@ function Tareas() {
       }
     };
 
-  
+   
 
     
     useEffect(() => {
+       
         const fetchTasks = async () => {
             try {
                 const response = await fetch('http://localhost:3000/tareas/');
@@ -211,7 +213,7 @@ function Tareas() {
                                     </select>
                                 </td>
                                 <td className="text-right px-2">
-                                    <Link to="/Editar">
+                                    <Link to={`/editar/${task.idTarea}`}>
                                         <button className="hover:bg-blue-400 mr-4 border border-[#313131] text-[#313131] text-lg hover:border-0 font-sans font-medium py-2 px-4 rounded-2xl" 
                                     >Editar</button>
                                     </Link>

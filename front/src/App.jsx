@@ -19,8 +19,8 @@ function App() {
           <Route path='/' element={<Inicio />} />
           <Route path='/Login' element={<Login />} />
             <Route path='/Tareas' element={<Tareas />} />
-              <Route path='/Editar/:id' element={<Editar />} />
-          <Route path="/Registrate" element={<Registrate />} />
+              <Route path='/Editar/:taskId' element={<Editar />} />
+          <Route path='/Registrate' element={<Registrate />} />
         </Routes>
         <Footer />
       </BrowserRouter>

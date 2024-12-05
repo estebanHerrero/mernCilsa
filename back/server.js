@@ -91,6 +91,42 @@ app.delete('/tareas/:id', async (req, res) => {
     }
 });
 
+
+//Registrar un usuario nuevo
+app.post('/Registrate', async (req, res) => {
+    try {
+        const { nombre, apellido, correoElectronico, contrasenia } = req.body;
+
+        if (!nombre, !apellido, !correoElectronico, !contrasenia) {
+            return res.status(400).send('Todos los campos son obligatorios.');
+        }
+
+        const [result] =  await db.query('INSERT INTO usuarios (nombre, apellido, correoElectronico, contrasenia) VALUES (?, ?, ?, ?)', [nombre, apellido, correoElectronico, contrasenia]);
+
+        res.status(201).json({ message: 'Usuario registrado correctamente.'});    
+    }catch (error) {
+        console.error('Error al registrar el usuario;', error);
+        res.status(500).send('Error al registrar el usuario');
+    }
+});
+
+//Login de usuario
+app.post('/Login', async (req, res) => {
+    const { correoElectronico, contrasenia } = req.body;
+
+    try {
+        const [rows] = await db.query('SELECT * FROM usuarios WHERE correoElectronico = ? AND contrasenia = ?', [correoElectronico, contrasenia]);
+
+        if (rows.length === 0){
+            return res.status(401).json({ message: 'Usuario o contraseña incorrectos.'});
+        }
+        return res.json({ message: 'Inicio de sesión exitoso.'});
+    }catch (err) {
+        console.error('Error al iniciar sesión', err);
+        return res.status(500).json({ message: 'Error en el servidor.'});
+    }
+});
+
   
 app.listen(3000, () => {
     console.log(" ..oO) Escuchando el puerto 3000 (Oo..");

@@ -8,7 +8,7 @@ function Tareas() {
 
     const [filter, setFilter] = useState('todas');
     const [tasks, setTasks] = useState([]);
-    const [newTask, setNewTask] = useState({ nombre: "", descripcion: ""});
+    const [newTask, setNewTask] = useState({ nombre: "", descripcion: "", estado: "Pendiente"});
     const [error, setError] = useState(null);
     const [isAddingTask, setIsAddingTask] = useState(false);
     const [selectedTasks, setSelectedTasks] = useState({});
@@ -20,7 +20,7 @@ function Tareas() {
           [taskId]: !prevSelectedTasks[taskId], 
         }));
         
-        const newState = selectedTasks[taskId] ? 'Finalizada' : 'Pendinte';
+        const newState = selectedTasks[taskId] ? 'Pendiente' : 'Finalizada';
         
         const updatedTasks = tasks.map(task => {
             if (task.idTarea === taskId) {
@@ -58,7 +58,6 @@ function Tareas() {
 
     
     useEffect(() => {
-       
         const fetchTasks = async () => {
             try {
                 const response = await fetch('http://localhost:3000/tareas/');
